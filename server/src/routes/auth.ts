@@ -62,48 +62,4 @@ export async function authRoutes(fastify: FastifyInstance) {
 
         return { token }
     })
-
-    fastify.post('/pools/:id/join', {
-        onRequest: [authenticate]
-    }, async (request, reply) => {
-        const joinPoolBody = z.object({
-            code: z.string(),
-        })
-
-        const { code } = joinPoolBody.parse(request.body)
-
-        const pool = await prisma.pool.findUnique({
-            where: {
-                code,
-            } , 
-            include: {
-                participants: {
-                    where: {
-                        userId: request.user.sub,
-                    }
-                }
-            }
-        })
-
-        if(!pool) {
-            return reply.status(400).send({ 
-                message: 'Pool not found.'
-            })
-        }
-
-        if(pool.participants.length > 0) {
-            return reply.status(400).send({ 
-                message: 'You already joined this pool.'
-            })
-        }
-
-        await prisma.participant.create({
-            data: {
-                poolId: pool.id,
-                userId: request.user.sub
-            }
-        })
-
-        return reply.status(201).send()
-    })
 }
