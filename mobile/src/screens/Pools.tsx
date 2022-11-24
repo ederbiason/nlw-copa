@@ -1,6 +1,6 @@
 import { Icon, useToast, VStack, FlatList } from "native-base";
 import { Octicons } from "@expo/vector-icons"
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 
 import { api } from "../services/api";
 
@@ -8,7 +8,7 @@ import { Button } from "../components/Button";
 import { Header } from "../components/Header";
 import { PoolCard, PoolProps } from "../components/PoolCard";
 import { Loading } from "../components/Loading";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { EmptyPoolList } from "../components/EmptyPoolList";
 
 export function Pools() {
@@ -39,9 +39,9 @@ export function Pools() {
         }
     }
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         fetchPools()
-    }, [])
+    }, []))
 
     return (
         <VStack flex={1} bgColor="gray.900">
