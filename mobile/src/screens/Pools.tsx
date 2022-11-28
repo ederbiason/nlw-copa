@@ -6,7 +6,7 @@ import { api } from "../services/api";
 
 import { Button } from "../components/Button";
 import { Header } from "../components/Header";
-import { PoolCard, PoolProps } from "../components/PoolCard";
+import { PoolCard, PoolCardProps } from "../components/PoolCard";
 import { Loading } from "../components/Loading";
 import { useCallback, useState } from "react";
 import { EmptyPoolList } from "../components/EmptyPoolList";
@@ -17,7 +17,7 @@ export function Pools() {
     const toast = useToast()
 
     const [isLoading, setIsLoading] = useState(true)
-    const [pools, setPools] = useState<PoolProps[]>([])
+    const [pools, setPools] = useState<PoolCardProps[]>([])
 
     async function fetchPools() {
         try {
@@ -61,7 +61,12 @@ export function Pools() {
                     : <FlatList
                         data={pools}
                         keyExtractor={item => item.id}
-                        renderItem={({ item }) => <PoolCard data={item} />}
+                        renderItem={({ item }) => (
+                            <PoolCard 
+                                data={item} 
+                                onPress={() => navigate('details', { id: item.id })}
+                            />
+                        )}
                         px={5}
                         showsVerticalScrollIndicator={false}
                         _contentContainerStyle={{ pb: 10 }}
